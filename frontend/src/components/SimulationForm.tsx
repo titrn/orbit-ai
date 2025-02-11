@@ -55,7 +55,7 @@ const SimulationForm: React.FC = () => {
       setSimulationResult(formattedResult);
     } catch (error) {
       console.error('Error running simulation:', error);
-    }
+    };
   };
 
 
