@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { runSimulation } from '../../api/simulation';
 import axios from 'axios';
+import LineChartComponent from './LineChartComponent';
 
 const SimulationForm: React.FC = () => {
   // State management
@@ -18,45 +19,44 @@ const SimulationForm: React.FC = () => {
     setParams({ mass: 1, thrust: 10, angle: 45 });
   };
 
-  // Run simulation
-  // const handleRunSimulation = async () => {
-  //   setLoading(true);
-  //   try {
-  //     console.log('Clicked Run Simulation...');
-  //     const response = await runSimulation(params);
-  //     setResult(response); // Set result correctly
-  //   } catch (error) {
-  //     console.error('SimulationForm error:', error);
+  // Handles Simulation Results
+  // const handleSimulation = async () => {
+  //   const response = await fetch('http://localhost:8000/simulate', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ mass: 1, thrust: 10, angle: 45 }),
+  //   });
+
+  //   const data = await response.json();
+  //   if (data.status === 'success') {
+  //     setSimulationResult(data.data); // ✅ Save the simulation data
   //   }
-  //   setLoading(false);
   // };
+
   const handleRunSimulation = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/simulate', {
-        mass: 1,
-        thrust: 10,
-        angle: 45,
-      });
+  setLoading(true); // Indicate loading
+  try {
+    const response = await axios.post('http://localhost:8000/simulate', params);
+    
+    console.log("Raw API Response:", response.data);
 
-      console.log('Raw API response:', response.data);
+    const { time, trajectory } = response.data.data;
 
-      // Extracting relevant data
-      const { time, trajectory } = response.data.data;
+    const formattedResult = time.map((t: number, index: number) => ({
+      time: t,
+      altitude: trajectory[0][index],
+      velocity: trajectory[2][index],
+    }));
 
-      // Transform into an array of objects
-      const formattedResult = time.map((t: number, index: number) => ({
-        time: t,
-        altitude: trajectory[0][index], // Assuming trajectory[0] is altitude
-        velocity: trajectory[2][index], // Assuming trajectory[2] is velocity
-      }));
+    console.log("Formatted Data for Chart:", formattedResult);
 
-      console.log('Formatted Simulation Result:', formattedResult);
-
-      setSimulationResult(formattedResult);
-    } catch (error) {
-      console.error('Error running simulation:', error);
-    };
-  };
+    setSimulationResult(formattedResult);
+  } catch (error) {
+    console.error("Error running simulation:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return (
@@ -98,6 +98,7 @@ const SimulationForm: React.FC = () => {
               ))}
             </tbody>
           </table>
+          <LineChartComponent data={simulationResult} />
         </div>
       ) : (
         <p>No simulation data available.</p>
