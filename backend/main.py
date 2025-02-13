@@ -19,8 +19,8 @@ def home():
 
 @app.post("/simulate")
 # our app calling the /simulation API function
-def simulate(thrust: float = 1000, mass: float = 500):
+def simulate(thrust: float = 1000, mass: float = 1000, angle: float= 45):
     print('hello /simulate main.py')
-    result = run_simulation(thrust, mass)
+    result = run_simulation(thrust, mass, angle)
     return {"status": "success", "data": result}
 
