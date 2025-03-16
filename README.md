@@ -12,6 +12,8 @@ Developed a full-stack simulation tool to optimize satellite and drone missions,
 2. **Control Optimization (AI & Machine Learning)**:
     - Trained a path-planning algorithm using **TensorFlow** or **Scikit-learn** to minimize fuel consumption and maximize mission efficiency.
     - Implemented *A search* and **genetic algorithms** for route and mission optimization.
+        - Minimizing fuel consumption
+        - Maximizing payload efficiency
 3. **Real-Time Visualization (React.js + Three.js)**:
     - Built an interactive 3D visualization of satellite/drone flight paths.
     - Enabled real-time updates of trajectory adjustments and mission data.
